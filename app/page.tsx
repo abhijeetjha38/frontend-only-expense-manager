@@ -1,7 +1,9 @@
+import { LoginForm } from "./login-form";
+
 export default function Home() {
   return (
-    <div className="flex flex-1 items-center justify-center">
-      <h1 className="text-2xl font-semibold">Login Page</h1>
-    </div>
+    <main className="flex min-h-screen items-center justify-center bg-muted p-4">
+      <LoginForm />
+    </main>
   );
 }
