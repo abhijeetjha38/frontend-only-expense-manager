@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -20,7 +21,7 @@ interface LoginFormValues {
 }
 
 export function LoginForm() {
-  const [isSuccess, setIsSuccess] = useState(false);
+  const router = useRouter();
   const [generalError, setGeneralError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -28,7 +29,6 @@ export function LoginForm() {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
     setFocus,
   } = useForm<LoginFormValues>({
     mode: "onSubmit",
@@ -59,7 +59,8 @@ export function LoginForm() {
       });
 
       if (response.ok) {
-        setIsSuccess(true);
+        router.push("/dashboard");
+        return;
       } else if (response.status === 401) {
         setGeneralError(
           "Invalid username or password. Please try again."
@@ -82,47 +83,6 @@ export function LoginForm() {
       setFocus("password");
     }
   };
-
-  const handleSignOut = () => {
-    setIsSuccess(false);
-    setGeneralError(null);
-    reset();
-  };
-
-  if (isSuccess) {
-    return (
-      <Card className="w-full max-w-sm">
-        <CardContent className="pt-6 pb-6 text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-            <svg
-              className="h-6 w-6 text-green-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-          </div>
-          <h2 className="text-xl font-semibold text-foreground">Welcome!</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            You have successfully signed in.
-          </p>
-          <Button
-            variant="outline"
-            className="mt-4 h-10 px-4"
-            onClick={handleSignOut}
-          >
-            Sign out
-          </Button>
-        </CardContent>
-      </Card>
-    );
-  }
 
   return (
     <Card className="w-full max-w-sm">
